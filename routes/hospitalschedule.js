@@ -1,0 +1,55 @@
+const express = require('express');
+const router = express.Router();
+const Hospital = require('../models/Hospital');
+const User = require('../models/User');
+const fetchuser = require('../fetchUser');
+
+router.get("/",fetchuser, async (req,res) => { 
+    try {
+        const hospitals = await Hospital.find();
+        res.json(hospitals);
+        
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
+router.post("/",fetchuser, async (req,res) => { 
+    
+    try {
+        const user = await User.findById(req.body.doctorId);
+        if(!user){
+            return  res.status(400).json({message: "Doctor not found"});
+        }
+        const hospital = new Hospital(req.body);
+        await hospital.save();
+        res.json(hospital);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
+router.get("/:id",fetchuser, async (req,res) => {
+    try {
+        const schedules = await Hospital.find({doctorId: req.params.id});
+        if(schedules.length === 0){
+            return res.status(404).json({message: "Schedule not found"});
+        }
+        res.json(schedules);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
+router.put("/:id",fetchuser, async (req,res) => {
+    try {
+        const schedule = await Hospital.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        if(!schedule){
+            return res.status(404).json({message: "Schedule not found"});
+        }
+        res.json(schedule);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+})
+module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const fetchuser = require('../fetchUser');
@@ -71,7 +71,7 @@ router.post('/loginUser', async (req, res) => {
 
     let existingUser = await User.findOne({email});
     if(!existingUser){
-      return res.status(400).json({error: "Invalid Credentials"})
+      return res.status(400).json({error: "User Not Found"})
     }
 
     const checkPass = await bcrypt.compare(password, existingUser.password);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
     
 const Hospital = new Schema({
@@ -11,4 +11,4 @@ const Hospital = new Schema({
   date: { type: Date, default: Date.now },
 },{ timestamps: true });
 
-export default mongoose.model('Hospital', Hospital);
+module.exports = mongoose.model('Hospital', Hospital);
